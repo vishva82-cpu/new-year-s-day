@@ -25,6 +25,23 @@
             overflow: hidden;
         }
 
+        /* Music Toggle Button */
+        #music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.6);
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: none; /* Only shows when surprise starts */
+            font-size: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
         /* Stickers */
         .sticker { position: absolute; font-size: 2.5rem; animation: float 5s infinite ease-in-out; opacity: 0.5; z-index: 1; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
@@ -89,8 +106,9 @@
 
     <audio id="bg-music" loop>
         <source src="WhatsApp Audio 2025-12-28 at 16.21.47_8dd99b68.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
     </audio>
+
+    <button id="music-control" onclick="toggleMusic()">🔊</button>
 
     <div class="sticker" style="top: 10%; left: 5%;">✨</div>
     <div class="sticker" style="bottom: 10%; right: 5%;">💙</div>
@@ -143,7 +161,9 @@
     </div>
 
     <script>
-        const targetDate = new Date("Jan 1, 2025 00:00:00").getTime();
+        const targetDate = new Date("Jan 1, 2026 00:00:00").getTime();
+        const music = document.getElementById('bg-music');
+        const musicBtn = document.getElementById('music-control');
 
         const timer = setInterval(() => {
             const now = new Date().getTime();
@@ -169,11 +189,12 @@
             document.getElementById('main-card').style.display = 'none';
             document.getElementById('surprise-modal').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
+            musicBtn.style.display = 'block';
 
-            // Play the music
-            const music = document.getElementById('bg-music');
-            music.play().catch(error => {
-                console.log("Autoplay prevented by browser. Music will play after a user interaction.");
+            // Attempt autoplay
+            music.play().catch(() => {
+                console.log("Autoplay blocked. User needs to tap the speaker icon.");
+                musicBtn.innerText = "🔇";
             });
 
             var end = Date.now() + (10 * 1000);
@@ -182,6 +203,16 @@
                 confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#bbdefb', '#ffffff'] });
                 if (Date.now() < end) { requestAnimationFrame(frame); }
             }());
+        }
+
+        function toggleMusic() {
+            if (music.paused) {
+                music.play();
+                musicBtn.innerText = "🔊";
+            } else {
+                music.pause();
+                musicBtn.innerText = "🔇";
+            }
         }
 
         function enlargeImage() {

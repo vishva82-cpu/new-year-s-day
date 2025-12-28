@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waiting for 2026...</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pastel-blue: #e3f2fd;
+            --accent-blue: #90caf9;
+            --text-dark: #455a64;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--pastel-blue);
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: var(--text-dark);
+            overflow: hidden;
+        }
+
+        /* Stickers */
+        .sticker { position: absolute; font-size: 2.5rem; animation: float 5s infinite ease-in-out; opacity: 0.5; z-index: 1; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        /* Countdown Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 50px;
+            border-radius: 40px;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            text-align: center;
+            z-index: 10;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .countdown-container { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+        .time-box { background: rgba(255, 255, 255, 0.6); padding: 10px; border-radius: 15px; min-width: 60px; text-align: center; }
+        .time-box span { display: block; font-size: 1.5rem; font-weight: 600; color: #1e88e5; }
+        .time-box label { font-size: 0.6rem; text-transform: uppercase; color: #90a4ae; }
+
+        /* Pop-up Overlay */
+        .overlay { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(227, 242, 253, 0.95); backdrop-filter: blur(10px); z-index: 99; 
+        }
+        
+        #surprise-modal {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: white; padding: 30px; border-radius: 30px; z-index: 100; 
+            width: 90%; max-width: 600px; max-height: 85vh; text-align: center; 
+            box-shadow: 0 30px 70px rgba(0,0,0,0.1); overflow-y: auto;
+        }
+
+        .photo-frame {
+            background: #fff; padding: 10px 10px 40px 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            transform: rotate(-1deg); margin-bottom: 30px; width: 85%; display: inline-block;
+            cursor: zoom-in; /* Shows she can click it */
+            transition: transform 0.3s ease;
+        }
+
+        .photo-frame:hover { transform: scale(1.02) rotate(0deg); }
+
+        .photo-frame img { width: 100%; max-height: 350px; object-fit: cover; border-radius: 2px; }
+        
+        /* IMAGE ENLARGE FEATURE (Lightbox) */
+        #lightbox {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); z-index: 200; align-items: center; justify-content: center;
+            cursor: zoom-out;
+        }
+        #lightbox img { max-width: 90%; max-height: 90%; border: 5px solid white; border-radius: 10px; }
+
+        .poem-text { 
+            font-size: 1.1rem; line-height: 2; color: #546e7a; font-style: italic; 
+            text-align: center; white-space: pre-line; padding-bottom: 20px;
+        }
+
+        h2 { font-family: 'Dancing Script', cursive; color: #1e88e5; font-size: 2.8rem; margin: 0 0 20px 0; }
+    </style>
+</head>
+<body>
+
+    <div class="sticker" style="top: 10%; left: 5%;">✨</div>
+    <div class="sticker" style="bottom: 10%; right: 5%;">💙</div>
+
+    <div class="glass-card" id="main-card">
+        <h1 style="font-family: 'Dancing Script'; font-size: 3rem; color: #64b5f6;">Our New Year...</h1>
+        <div class="countdown-container">
+            <div class="time-box"><span id="days">00</span><label>Days</label></div>
+            <div class="time-box"><span id="hours">00</span><label>Hrs</label></div>
+            <div class="time-box"><span id="mins">00</span><label>Min</label></div>
+            <div class="time-box"><span id="secs">00</span><label>Sec</label></div>
+        </div>
+        <p>Stay here until the clock strikes midnight. ❤️</p>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div id="surprise-modal">
+        <div class="photo-frame" onclick="enlargeImage()">
+            <img id="main-img" src="neww.png" alt="Our Special Moment" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=800'">
+            <p style="font-size: 0.7rem; color: #aaa; margin-top: 5px;">(Tap to enlarge)</p>
+        </div>
+        
+        <h2>Happy New Year, Love!</h2>
+        
+        <div class="poem-text">
+            Har roz wahi same routine aur wahi busy life,
+            Par tumhare ek message se everything feels alright.
+            I don’t know ki kya jadoo hai tumhari baaton mein,
+            But I find myself lost, bas tumhare hi khayalon mein.
+
+            Log kehte hain ki perfection doesn't exist,
+            Par tumhari smile is something I can never resist.
+            Tumhara wo mujhse ladna, aur phir gussa bhool jaana,
+            Is literally the cutest thing, baby... maine toh bas tumhara hi hona.
+
+            Every time I see you, waqt thoda tham sa jaata hai,
+            Dil mera pagal hokar, bas tumhare geet gaata hai.
+            I promise to be there, har mushkil aur har fight mein,
+            I'll hold your hand tightly, chahe darkness ho ya light mein.
+
+            You’re not just my love, tum meri soulmate ho,
+            I’m so lucky ki my life ki tum itni badi update ho.
+            Let’s stay like this, hamesha aur hamesha,
+            Kyuki tumhare bina, life feels like a total tamasha.
+        </div>
+    </div>
+
+    <div id="lightbox" onclick="this.style.display='none'">
+        <img id="enlarged-img" src="" alt="Enlarged View">
+    </div>
+
+    <script>
+        // Set Date to 2026
+        const targetDate = new Date("Jan 1, 2025 00:00:00").getTime();
+
+        const timer = setInterval(() => {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = d;
+            document.getElementById("hours").innerText = h;
+            document.getElementById("mins").innerText = m;
+            document.getElementById("secs").innerText = s;
+
+            if (diff <= 0) {
+                clearInterval(timer);
+                showSurprise();
+            }
+        }, 1000);
+
+        function showSurprise() {
+            document.getElementById('main-card').style.display = 'none';
+            document.getElementById('surprise-modal').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+
+            var end = Date.now() + (10 * 1000);
+            (function frame() {
+                confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#bbdefb', '#ffffff'] });
+                confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#bbdefb', '#ffffff'] });
+                if (Date.now() < end) { requestAnimationFrame(frame); }
+            }());
+        }
+
+        // Enlarging Image Function
+        function enlargeImage() {
+            const src = document.getElementById('main-img').src;
+            document.getElementById('enlarged-img').src = src;
+            document.getElementById('lightbox').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>

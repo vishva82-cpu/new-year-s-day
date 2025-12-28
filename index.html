@@ -63,15 +63,13 @@
         .photo-frame {
             background: #fff; padding: 10px 10px 40px 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.08);
             transform: rotate(-1deg); margin-bottom: 30px; width: 85%; display: inline-block;
-            cursor: zoom-in; /* Shows she can click it */
+            cursor: zoom-in;
             transition: transform 0.3s ease;
         }
 
         .photo-frame:hover { transform: scale(1.02) rotate(0deg); }
-
         .photo-frame img { width: 100%; max-height: 350px; object-fit: cover; border-radius: 2px; }
         
-        /* IMAGE ENLARGE FEATURE (Lightbox) */
         #lightbox {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.85); z-index: 200; align-items: center; justify-content: center;
@@ -88,6 +86,11 @@
     </style>
 </head>
 <body>
+
+    <audio id="bg-music" loop>
+        <source src="WhatsApp Audio 2025-12-28 at 16.21.47_8dd99b68.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
     <div class="sticker" style="top: 10%; left: 5%;">✨</div>
     <div class="sticker" style="bottom: 10%; right: 5%;">💙</div>
@@ -140,7 +143,6 @@
     </div>
 
     <script>
-        // Set Date to 2026
         const targetDate = new Date("Jan 1, 2026 00:00:00").getTime();
 
         const timer = setInterval(() => {
@@ -168,6 +170,12 @@
             document.getElementById('surprise-modal').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
 
+            // Play the music
+            const music = document.getElementById('bg-music');
+            music.play().catch(error => {
+                console.log("Autoplay prevented by browser. Music will play after a user interaction.");
+            });
+
             var end = Date.now() + (10 * 1000);
             (function frame() {
                 confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#bbdefb', '#ffffff'] });
@@ -176,7 +184,6 @@
             }());
         }
 
-        // Enlarging Image Function
         function enlargeImage() {
             const src = document.getElementById('main-img').src;
             document.getElementById('enlarged-img').src = src;
